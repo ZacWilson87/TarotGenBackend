@@ -10,7 +10,7 @@ import (
 )
 
 // GenerateTarotCardDesign generates a tarot card design using DALL·E
-func GenerateTarotCardDesign(card, theme, color1 string, color2 string) (string, error) {
+func GenerateTarotCardDesign(card, theme, color1 string) (string, error) {
 	apiKey := os.Getenv("OPENAI_API_KEY")
 	if apiKey == "" {
 		// If no API key is provided, return a default response
@@ -20,7 +20,7 @@ func GenerateTarotCardDesign(card, theme, color1 string, color2 string) (string,
 	url := os.Getenv("OPENAI_BASE_URL") // Use the DALL·E image generation endpoint
 
 	// Build the request body
-	requestBody, err := buildPostRequestBody(card, theme, color1, color2)
+	requestBody, err := buildPostRequestBody(card, theme, color1)
 	if err != nil {
 		return "", fmt.Errorf("error building request body: %w", err)
 	}
@@ -40,15 +40,15 @@ func GenerateTarotCardDesign(card, theme, color1 string, color2 string) (string,
 	return parseImageResponse(responseBody)
 }
 
-func buildPostRequestBody(card, theme, color1 string, color2 string) ([]byte, error) {
-	if card == "" || theme == "" || color1 == "" || color2 == "" {
+func buildPostRequestBody(card, theme, color1 string) ([]byte, error) {
+	if card == "" || theme == "" || color1 == "" {
 		return nil, fmt.Errorf("card, theme, and color are required")
 	}
 
 	// Construct the prompt for DALL·E image generation
 	prompt := fmt.Sprintf(
-		"Design a detailed illustration for the front side of the tarot card '%s', in a '%s' style. The artwork should fill the entire canvas with no borders or empty spaces, emphasizing hues of '%s' and secondary hues of '%s'. Incorporate traditional tarot symbolism and ensure the design is vertically oriented. Do not add numbers or letters whatsoever in the design.",
-		card, theme, color1, color2,
+		"Design a detailed illustration for the front side of the tarot card '%s', in a '%s' style. The artwork should fill the entire canvas with no borders or empty spaces, emphasizing hues of '%s'. Incorporate traditional tarot symbolism and ensure the design is vertically oriented. Do not add numbers or letters whatsoever in the design.",
+		card, theme, color1,
 	)
 
 	requestBody, err := json.Marshal(map[string]interface{}{
@@ -83,7 +83,6 @@ func sendRequest(req *http.Request) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
-	// Print or log the full response body for debugging
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
