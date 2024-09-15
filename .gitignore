@@ -1,25 +1,90 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
-# Binaries for programs and plugins
+# Binary executables
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
-
-# Test binary, built with `go test -c`
 *.test
-
-# Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Build directories
+/build/
+bin/
+release/
 
-# Go workspace file
-go.work
-go.work.sum
+# Compiled object files
+*.o
+*.a
 
-# env file
-.env
+# Coverage and profile data
+coverage.out
+coverage.html
+profile.out
+
+# Logs
+*.log
+
+# Vendor dependencies (if not using vendoring)
+vendor/
+
+# Go modules (usually should be committed)
+# Uncomment the following line if you choose not to commit go.sum
+# go.sum
+
+# IDE/editor configurations
+# VSCode
+.vscode/
+# GoLand/IntelliJ IDEA
+.idea/
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*~
+*.tmp
+*.swp
+
+# Dependency management files (if using tools like dep)
+Gopkg.lock
+Gopkg.toml
+
+# Glide
+glide.lock
+glide.yaml
+
+# Go workspace settings
+.envrc
+
+# cgo generated files
+_cgo*
+
+# Godoc generated files
+docs/
+
+# Test result files
+test_results/
+
+# Generated code (if applicable)
+gen/
+
+# Node modules (if your project includes frontend code)
+node_modules/
+
+# Terraform files (if using Terraform in your project)
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Kubernetes config (if applicable)
+kubeconfig
+
+# Secrets and API keys (if any other secret files are used)
+secrets.yml
+
+
+.env*

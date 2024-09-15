@@ -1,0 +1,41 @@
+### Test Get All Tarot Cards
+GET http://localhost:8080/api/getTarotCardsList
+Content-Type: application/json
+
+###
+
+### Test Generate Tarot Card with Valid Data
+POST http://localhost:8080/api/generateTarotCard
+Content-Type: application/json
+
+{
+    "card": "Death",
+    "theme": "japanese traditional",
+    "color1": "orange",
+    "color2": "blue"
+}
+
+###
+
+### Test Generate Tarot Card with Invalid Card
+POST http://localhost:8080/api/generateTarotCard
+Content-Type: application/json
+
+{
+    "card": "Invalid Card Name",
+    "theme": "dark fantasy",
+    "color1": "purple",
+    "color2": "green"
+}
+
+###
+
+### Test Generate Tarot Card with Missing Fields
+POST http://localhost:8080/api/generateTarotCard
+Content-Type: application/json
+
+{
+    "theme": "dark fantasy",
+    "color1": "purple",
+    "color2": "black"
+}
