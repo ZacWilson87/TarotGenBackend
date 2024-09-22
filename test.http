@@ -9,10 +9,11 @@ POST http://localhost:8080/api/generateTarotCard
 Content-Type: application/json
 
 {
-    "card": "Death",
-    "theme": "japanese traditional",
-    "color1": "orange",
+    "tarotCard": "The Chariot",
+    "theme": "op art",
+    "color1": "purple"
 }
+
 
 ###
 
@@ -21,7 +22,7 @@ POST http://localhost:8080/api/generateTarotCard
 Content-Type: application/json
 
 {
-    "card": "Invalid Card Name",
+    "tarotCard": "Invalid Card Name",
     "theme": "dark fantasy",
     "color1": "purple",
 }

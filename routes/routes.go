@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 )
 
 type Route struct {
@@ -13,18 +14,20 @@ type Route struct {
 	Method  string
 }
 
-func GetRoutes() []Route {
+// GetRoutes returns a slice of routes, accepting the database connection and passing it to handlers
+func GetRoutes(db *gorm.DB) []Route {
 	return []Route{
 		// POST request to generate a tarot card
-		{Path: "/api/generateTarotCard", Handler: controllers.GenerateTarotCardHandler, Method: "POST"},
+		{Path: "/api/generateTarotCard", Handler: controllers.GenerateTarotCardHandler(db), Method: "POST"},
 
 		// GET request to get all available tarot cards
-		{Path: "/api/getTarotCardsList", Handler: controllers.GetAllTarotCardsHandler, Method: "GET"},
+		{Path: "/api/getTarotCardsList", Handler: controllers.GetAllTarotCardsHandler(db), Method: "GET"},
 	}
 }
 
-func LoadRoutes(router *mux.Router) {
-	routes := GetRoutes()
+// LoadRoutes sets up the routes in the router with the provided database connection
+func LoadRoutes(router *mux.Router, db *gorm.DB) {
+	routes := GetRoutes(db)
 
 	for _, route := range routes {
 		router.HandleFunc(route.Path, route.Handler).Methods(route.Method)

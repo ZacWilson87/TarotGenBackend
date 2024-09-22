@@ -1,7 +1,9 @@
 package config
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -11,8 +13,11 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
+	port := os.Getenv("PORT")
+	dbName := os.Getenv("DB_NAME")
+	password := os.Getenv("DB_PASSWORD")
 
-	dsn := "host=localhost user=zacw password=password dbname=tarotdb port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+	dsn := fmt.Sprintf("host=localhost user=zacw password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", password, dbName, port)
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
