@@ -96,3 +96,20 @@ func GetAllTarotCardsHandler(db *gorm.DB) http.HandlerFunc {
 		json.NewEncoder(w).Encode(cards)
 	}
 }
+
+// GetPlaceholderDeckHandler handles the /placeholderDeck GET request
+// It retrieves the placeholder deck from the database
+func GetPlaceholderDeckHandler(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Retrieve the placeholder deck from the database
+		deck, err := models.GetPlaceholderDeck(db)
+		if err != nil {
+			http.Error(w, "Failed to retrieve placeholder deck", http.StatusInternalServerError)
+			return
+		}
+
+		// Return the placeholder deck as JSON
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(deck)
+	}
+}

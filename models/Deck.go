@@ -60,3 +60,14 @@ func GetDeck(db *gorm.DB, deckID uint) (*Deck, error) {
 	}
 	return &deck, nil
 }
+
+// GetPlaceholderDeck returns a placeholder deck for a Tarot card
+func GetPlaceholderDeck(db *gorm.DB) ([]TarotCard, error) {
+	var cards []TarotCard
+	// get all cards where deck_id is 1
+	err := db.Where("deck_id = ?", 1).Find(&cards).Error
+	if err != nil {
+		return cards, err
+	}
+	return cards, nil
+}
