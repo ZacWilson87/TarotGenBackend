@@ -60,7 +60,7 @@ func SeedDatabase(db *gorm.DB) {
 	for _, seedCard := range seedData.Cards {
 		// Set the DeckID for each card to the newly created deck's ID
 		seedCard.DeckID = deck.ID
-
+		seedCard.IsReversed = false
 		// Insert Tarot card into the database
 		if err := db.Create(&seedCard).Error; err != nil {
 			log.Printf("Error seeding Tarot card %s: %v", seedCard.Name, err)

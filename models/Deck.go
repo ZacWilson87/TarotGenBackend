@@ -2,7 +2,9 @@ package models
 
 import (
 	"fmt"
+	"time"
 
+	"golang.org/x/exp/rand"
 	"gorm.io/gorm"
 )
 
@@ -59,4 +61,44 @@ func GetDeck(db *gorm.DB, deckID uint) (*Deck, error) {
 		return nil, err
 	}
 	return &deck, nil
+}
+
+// GetPlaceholderDeck returns a placeholder deck for a Tarot card
+func GetPlaceholderDeck(db *gorm.DB) ([]TarotCard, error) {
+	var cards []TarotCard
+	// get all cards where deck_id is 1
+	err := db.Where("deck_id = ?", 1).Find(&cards).Error
+	if err != nil {
+		return cards, err
+	}
+	return cards, nil
+}
+
+func ShuffleDeck(db *gorm.DB) ([]TarotCard, error) {
+	// Get all tarot cards from the database
+	deck, err := GetAllTarotCards(db)
+	if err != nil {
+		return nil, err
+	}
+
+	// Shuffle the deck
+	rand.Seed(uint64(time.Now().UnixNano()))
+	rand.Shuffle(len(deck), func(i, j int) { deck[i], deck[j] = deck[j], deck[i] })
+
+	// Randomly reverse cards
+	deck = ReverseRandomCards(deck)
+	return deck, nil
+}
+
+// GetIsReversed determines if a card should be reversed (15% chance)
+func GetIsReversed() bool {
+	return rand.Intn(100) < 15
+}
+
+// ReverseRandomCards randomly sets the IsReversed field on cards
+func ReverseRandomCards(deck []TarotCard) []TarotCard {
+	for i := range deck {
+		deck[i].IsReversed = GetIsReversed()
+	}
+	return deck
 }

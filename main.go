@@ -28,7 +28,14 @@ func main() {
 	config.ConnectDatabase()
 
 	// Auto-migrate the schema for the Deck and TarotCard models
-	if err := config.DB.AutoMigrate(&models.Deck{}, &models.TarotCard{}); err != nil {
+	if err := config.DB.AutoMigrate(
+		&models.Deck{},
+		&models.TarotCard{},
+		&models.ThreeCardReading{},
+		&models.LoveTarotReading{},
+		&models.SuccessReading{},
+		&models.SpiritualGuidanceReading{},
+	); err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)
 	}
 

@@ -21,6 +21,7 @@ type TarotCard struct {
 	DeckID          uint       `gorm:"not null" json:"deck_id"`           // Foreign key to the associated Deck (if applicable)
 	Meaning         string     `gorm:"type:text" json:"meaning"`          // Upright Tarot card meaning
 	ReversedMeaning string     `gorm:"type:text" json:"reversed_meaning"` // Reversed Tarot card meaning
+	IsReversed      bool       `gorm:"not null" json:"is_reversed"`       // Whether the Tarot card is reversed
 }
 
 // IsValidTarotCard checks if a Tarot card exists in the database by name
@@ -38,4 +39,14 @@ func GetAllTarotCards(db *gorm.DB) ([]TarotCard, error) {
 		return nil, err
 	}
 	return cards, nil
+}
+
+func GenTarotCardMetadataFromCardName(db *gorm.DB, cardName string) (TarotCard, error) {
+	var tarotCard TarotCard
+
+	err := db.Where("name = ?", cardName).First(&tarotCard).Error
+	if err != nil {
+		return tarotCard, err
+	}
+	return tarotCard, nil
 }
