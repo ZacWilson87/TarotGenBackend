@@ -13,7 +13,7 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	port := os.Getenv("PORT")
+	port := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_NAME")
 	password := os.Getenv("DB_PASSWORD")
 

@@ -1,11 +1,13 @@
+@baseUrl = http://localhost:8080
+
 ### Test Get All Tarot Cards
-GET http://localhost:8080/api/getTarotCardsList
+GET {{baseUrl}}/api/getTarotCardsList
 Content-Type: application/json
 
 ###
 
 ### Test Generate Tarot Card with Valid Data
-POST http://localhost:8080/api/generateTarotCard
+POST {{baseUrl}}/api/generateTarotCard
 Content-Type: application/json
 
 {
@@ -14,26 +16,111 @@ Content-Type: application/json
     "color1": "purple"
 }
 
-
 ###
 
 ### Test Generate Tarot Card with Invalid Card
-POST http://localhost:8080/api/generateTarotCard
+POST {{baseUrl}}/api/generateTarotCard
 Content-Type: application/json
 
 {
     "tarotCard": "Invalid Card Name",
     "theme": "dark fantasy",
-    "color1": "purple",
+    "color1": "purple"
 }
 
 ###
 
 ### Test Generate Tarot Card with Missing Fields
-POST http://localhost:8080/api/generateTarotCard
+POST {{baseUrl}}/api/generateTarotCard
 Content-Type: application/json
 
 {
     "theme": "dark fantasy",
-    "color1": "purple",
+    "color1": "purple"
 }
+
+###
+
+### Generate a Three Card Reading
+POST {{baseUrl}}/api/three-card-reading
+Content-Type: application/json
+
+{}
+
+###
+
+### Get All Three Card Readings
+GET {{baseUrl}}/api/three-card-readings
+Content-Type: application/json
+
+###
+
+### Get a Specific Three Card Reading by ID
+GET {{baseUrl}}/api/three-card-readings/1
+Content-Type: application/json
+
+###
+
+### Generate a Love Tarot Reading
+POST {{baseUrl}}/api/love-tarot-reading
+Content-Type: application/json
+
+{}
+
+###
+
+### Get All Love Tarot Readings
+GET {{baseUrl}}/api/love-tarot-readings
+Content-Type: application/json
+
+###
+
+### Get a Specific Love Tarot Reading by ID
+GET {{baseUrl}}/api/love-tarot-readings/1
+Content-Type: application/json
+
+###
+
+###
+
+### Generate a Success Reading
+POST {{baseUrl}}/api/success-reading
+Content-Type: application/json
+
+{}
+
+###
+
+### Get All Success Readings
+GET {{baseUrl}}/api/success-readings
+Content-Type: application/json
+
+###
+
+### Get a Specific Success Reading by ID
+GET {{baseUrl}}/api/success-readings/1
+Content-Type: application/json
+
+###
+
+###
+
+### Generate a Spiritual Guidance Reading
+POST {{baseUrl}}/api/spiritual-guidance-reading
+Content-Type: application/json
+
+{}
+
+###
+
+### Get All Spiritual Guidance Readings
+GET {{baseUrl}}/api/spiritual-guidance-readings
+Content-Type: application/json
+
+###
+
+### Get a Specific Spiritual Guidance Reading by ID
+GET {{baseUrl}}/api/spiritual-guidance-readings/1
+Content-Type: application/json
+
+###
