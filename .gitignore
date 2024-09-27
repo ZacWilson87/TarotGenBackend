@@ -87,4 +87,4 @@ kubeconfig
 secrets.yml
 
 
-.env*
+.env
