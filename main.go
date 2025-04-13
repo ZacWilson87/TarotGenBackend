@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend_tarot/config"
+	"backend_tarot/middleware"
 	"backend_tarot/models"
 	"backend_tarot/routes"
 	"backend_tarot/seed"
@@ -88,6 +89,15 @@ func main() {
 
 	// Initialize the router
 	router := mux.NewRouter()
+
+	// Add rate limiting middleware
+	router.Use(middleware.DefaultRateLimiter())
+
+	// Add validation middleware
+	validator := middleware.NewValidator()
+	router.Use(middleware.ValidatorMiddleware(validator))
+
+	// Load routes
 	routes.LoadRoutes(router, config.DB)
 
 	FRONTEND_URL := os.Getenv("FRONTEND_URL")
@@ -102,7 +112,7 @@ func main() {
 		AllowedOrigins:   []string{FRONTEND_URL},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Authorization", "Content-Type", "X-Requested-With"},
-		ExposedHeaders:   []string{"Content-Length"},
+		ExposedHeaders:   []string{"Content-Length", "X-RateLimit-Limit", "X-RateLimit-Remaining", "X-RateLimit-Reset"},
 		AllowCredentials: true,
 		MaxAge:           86400, // 24 hours
 	})
