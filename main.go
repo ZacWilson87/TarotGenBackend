@@ -18,11 +18,38 @@ import (
 	"github.com/rs/cors"
 )
 
+// validateEnv checks if all required environment variables are set
+func validateEnv() {
+	requiredEnvVars := []string{
+		"DB_HOST",
+		"DB_PORT",
+		"DB_USER",
+		"DB_NAME",
+		"DB_PASSWORD",
+		"OPENAI_API_KEY",
+		"OPENAI_BASE_URL",
+		"FRONTEND_URL",
+		"AUTH0_DOMAIN",
+		"AUTH0_AUDIENCE",
+		"AUTH0_CLIENT_ID",
+		"AUTH0_CLIENT_SECRET",
+	}
+
+	for _, envVar := range requiredEnvVars {
+		if os.Getenv(envVar) == "" {
+			log.Fatalf("Required environment variable %s is not set", envVar)
+		}
+	}
+}
+
 func main() {
 	// Load environment variables from .env file
 	if err := godotenv.Load(".env"); err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
+
+	// Validate environment variables
+	validateEnv()
 
 	// Connect to the database
 	config.ConnectDatabase()
@@ -70,18 +97,20 @@ func main() {
 		log.Printf("FRONTEND_URL: %s", FRONTEND_URL)
 	}
 
-	// CORS setup
+	// Enhanced CORS configuration
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{FRONTEND_URL}, // React app origin
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
-		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowedOrigins:   []string{FRONTEND_URL},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Authorization", "Content-Type", "X-Requested-With"},
+		ExposedHeaders:   []string{"Content-Length"},
 		AllowCredentials: true,
+		MaxAge:           86400, // 24 hours
 	})
 
 	// Wrap the router with the CORS handler
 	handler := c.Handler(router)
 
-	// Create a custom HTTP server for graceful shutdown
+	// Create a custom HTTP server with enhanced security settings
 	srv := &http.Server{
 		Handler:      handler,
 		Addr:         ":8080",

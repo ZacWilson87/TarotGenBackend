@@ -22,6 +22,10 @@ func GetRoutes(db *gorm.DB) []Route {
 		{Path: "/api/getTarotCardsList", Handler: controllers.GetAllTarotCardsHandler(db), Method: "GET"},
 		{Path: "/api/getPlaceholderDeck", Handler: controllers.GetPlaceholderDeckHandler(db), Method: "GET"},
 
+		// Deck Routes
+		{Path: "/api/decks", Handler: controllers.GetAllDecks(db), Method: "GET"},
+		{Path: "/api/decks/{id}", Handler: controllers.GetDeckByID(db), Method: "GET"},
+
 		// Three Card Reading Routes
 		{Path: "/api/three-card-reading", Handler: controllers.GenerateThreeCardReading(db), Method: "POST"},
 		{Path: "/api/three-card-readings", Handler: controllers.GetAllReadings(db), Method: "GET"},

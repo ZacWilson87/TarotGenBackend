@@ -33,15 +33,23 @@ func GenerateTarotCardHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
+		// find card via name and return card description
+		var tarotCard models.TarotCard
+		err = db.Where("name = ?", req.Card).First(&tarotCard).Error
+		if err != nil {
+			http.Error(w, "Tarot card not found", http.StatusNotFound)
+			return
+		}
+
 		// Generate Tarot card design using OpenAI API
-		cardDesignURL, err := handlers.GenerateTarotCardDesign(req.Card, req.Theme, req.Color1)
+		cardDesignObj, err := handlers.GenerateTarotCardDesign(tarotCard.Description, req.Theme, req.Color1)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Error generating tarot card: %v", err), http.StatusInternalServerError)
 			return
 		}
 
 		// Download and save the image locally
-		imagePath, err := handlers.DownloadImage(cardDesignURL, req.Card)
+		imagePath, err := handlers.DownloadImage(cardDesignObj.Url, req.Card)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Error downloading tarot card image: %v", err), http.StatusInternalServerError)
 			return
@@ -58,10 +66,12 @@ func GenerateTarotCardHandler(db *gorm.DB) http.HandlerFunc {
 		// Create a new TarotCard object
 		newCard := models.TarotCard{
 			Name:            req.Card,
-			ArcanaType:      models.MajorArcana, // Logic to determine Major/Minor Arcana
+			ArcanaType:      tarotCard.ArcanaType, // Logic to determine Major/Minor Arcana
 			FilePath:        imagePath,
-			Meaning:         "Meaning of the card", // Use the correct logic to set the meaning
-			ReversedMeaning: "Reversed meaning",    // Use the correct logic to set the reversed meaning
+			Meaning:         tarotCard.Meaning,         // Use the correct logic to set the meaning
+			ReversedMeaning: tarotCard.ReversedMeaning, // Use the correct logic to set the reversed meaning
+			Description:     cardDesignObj.Description,
+			Suit:            tarotCard.Suit,
 		}
 
 		// Add the card to the deck (or create a new deck if it already exists)

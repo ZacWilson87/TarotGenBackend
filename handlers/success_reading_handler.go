@@ -106,7 +106,7 @@ func GenerateSuccessReadingExplanation(
 
 	// Prepare the request payload
 	requestBody, err := json.Marshal(map[string]interface{}{
-		"model": "gpt-3.5-turbo",
+		"model": "gpt-4",
 		"messages": []map[string]string{
 			{"role": "system", "content": "You are a helpful tarot card interpreter specializing in success readings."},
 			{"role": "user", "content": prompt},

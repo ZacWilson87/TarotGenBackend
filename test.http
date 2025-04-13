@@ -124,3 +124,8 @@ GET {{baseUrl}}/api/spiritual-guidance-readings/1
 Content-Type: application/json
 
 ###
+
+// get decks
+###
+GET {{baseUrl}}/api/decks
+Content-Type: application/application/json

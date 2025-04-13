@@ -14,70 +14,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// GenerateThreeCardReadingHandler handles generating and storing a three-card reading
-func GenerateThreeCardReadingHandler(db *gorm.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		// Shuffle the deck
-		deck, err := models.ShuffleDeck(db)
-		if err != nil {
-			http.Error(w, "Failed to shuffle deck", http.StatusInternalServerError)
-			return
-		}
-
-		if len(deck) < 3 {
-			http.Error(w, "Not enough cards in the deck", http.StatusInternalServerError)
-			return
-		}
-
-		// Select the top three cards
-		pastCard := deck[0]
-		presentCard := deck[1]
-		futureCard := deck[2]
-
-		// Generate reading explanation using OpenAI
-		explanation, err := GenerateReadingExplanation(pastCard, presentCard, futureCard)
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Error generating reading: %v", err), http.StatusInternalServerError)
-			return
-		}
-
-		// Create a ThreeCardReading instance
-		reading := models.ThreeCardReading{
-			PastCardID:            pastCard.ID,
-			PastCardIsReversed:    pastCard.IsReversed,
-			PresentCardID:         presentCard.ID,
-			PresentCardIsReversed: presentCard.IsReversed,
-			FutureCardID:          futureCard.ID,
-			FutureCardIsReversed:  futureCard.IsReversed,
-			Reading:               explanation,
-			Date:                  time.Now(),
-		}
-
-		// Save the reading to the database
-		err = reading.Create(db)
-		if err != nil {
-			http.Error(w, "Failed to save reading", http.StatusInternalServerError)
-			return
-		}
-
-		// Retrieve the reading with associated cards
-		readingWithCards, err := models.GetThreeCardReadingByID(db, reading.ID)
-		if err != nil {
-			http.Error(w, "Failed to retrieve reading", http.StatusInternalServerError)
-			return
-		}
-
-		// Set the IsReversed flags on the associated cards
-		readingWithCards.PastCard.IsReversed = readingWithCards.PastCardIsReversed
-		readingWithCards.PresentCard.IsReversed = readingWithCards.PresentCardIsReversed
-		readingWithCards.FutureCard.IsReversed = readingWithCards.FutureCardIsReversed
-
-		// Return the reading as JSON
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(readingWithCards)
-	}
-}
-
 func GenerateAndSaveThreeCardReading(db *gorm.DB) (models.ThreeCardReading, error) {
 	// Shuffle the deck
 	deck, err := models.ShuffleDeck(db)
@@ -148,7 +84,7 @@ func GenerateReadingExplanation(past models.TarotCard, present models.TarotCard,
 
 	// Prepare the request payload
 	requestBody, err := json.Marshal(map[string]interface{}{
-		"model": "gpt-3.5-turbo",
+		"model": "gpt-4",
 		"messages": []map[string]string{
 			{"role": "system", "content": "You are a helpful tarot card interpreter."},
 			{"role": "user", "content": prompt},
